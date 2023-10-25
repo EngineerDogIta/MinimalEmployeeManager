@@ -1,0 +1,19 @@
+// This is the main page of the application
+// title, message are bindend variables
+
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        // Set a viewport for mobile devices
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title #{title}
+        link(rel="stylesheet", href="https://unpkg.com/mvp.css")
+    body
+        h1 #{message}
+        p This is the main page of the application
+        button(style="margin-left: 10px")
+            a(href="/employees") Employees
+        button(style="margin-left: 10px") 
+            a(href="/departments") Departments
+        
