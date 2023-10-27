@@ -1,0 +1,24 @@
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        title Todo Page
+        link(rel="stylesheet", href="https://unpkg.com/mvp.css")
+    body
+        if employee
+            header
+                h1 Edit Employee #{employee.firstName} #{employee.lastName}
+            main
+                form(action="/update-employee", method="post") 
+                input(type="text", name="firstName", value=employee.firstName)
+                input(type="text", name="lastName", value=employee.lastName)
+                if departments & departments.length > 0
+                    select(name="department")
+                        each department in departments
+                            if department._id == employee.department._id
+                                option(value="#{department._id}", selected) #{department.name}
+                            else
+                                option(value="#{department._id}") #{department.name}
+                else
+                    p No departments found do assign to employee
+                button(type="submit") Update Employee

@@ -6,8 +6,45 @@ html(lang="en")
         title Todo Page
         link(rel="stylesheet", href="https://unpkg.com/mvp.css")
     body
-        h1 Todo Page
-        ul
-            li Get groceries
-            li Walk the dog
-            li Do laundry
+        header 
+            h1 Employees
+        main
+            table(width="100%")
+                thead
+                    tr
+                        th First Name
+                        th Last Name
+                        th Department
+                tbody
+                    if employees & employees.length > 0
+                        each employee in employees
+                            tr
+                                td #{employee.firstName}
+                                td #{employee.lastName}
+                                if employee.department
+                                    td #{employee.department.name}
+                                else
+                                    td No department
+                        else
+                            tr
+                                td(colspan="3") No employees found
+                    else
+                            tr
+                                td(colspan="3") No employees var found
+            //- form(action="/api/employees", method="post", enctype="json")
+            //-     h1 Add Employee
+            //-     label(for="firstName") First Name
+            //-     input(type="text", name="firstName")
+            //-     label(for="lastName") Last Name
+            //-     input(type="text", name="lastName")
+            //-     label(for="department") Department
+            //-     if departments & departments.length > 0
+            //-         select(name="department")
+            //-             each department in departments
+            //-                 option(value="#{department._id}") #{department.name}
+            //-     else
+            //-         p No departments found do assign to employee
+            //-     button(type="submit") Add Employee
+        footer
+            p This is the footer
+            p #{new Date().toLocaleDateString()}

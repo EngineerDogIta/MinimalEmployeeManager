@@ -10,10 +10,17 @@ html(lang="en")
         title #{title}
         link(rel="stylesheet", href="https://unpkg.com/mvp.css")
     body
-        h1 #{message}
-        p This is the main page of the application
-        button(style="margin-left: 10px")
-            a(href="/employees") Employees
-        button(style="margin-left: 10px") 
-            a(href="/departments") Departments
-        
+        header
+            h1 #{title}
+            nav 
+                a(href="/") 
+                    button Home
+                a(href="/employees") 
+                    button Employees
+                a(href="/departments")
+                    button Departments
+        main
+            h1 #{message}
+        footer 
+            p This is the footer
+            p #{new Date().toLocaleDateString()}

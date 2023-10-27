@@ -6,8 +6,29 @@ html(lang="en")
         title Todo Page
         link(rel="stylesheet", href="https://unpkg.com/mvp.css")
     body
-        h1 Todo Page
-        ul
-            li Get groceries
-            li Walk the dog
-            li Do laundry
+        header 
+            h1 Departments
+        main
+            table(width="100%")
+                thead
+                    tr
+                        th Name
+                        th Number of Employees
+                tbody
+                    if departments & departments.length > 0
+                        each department in departments
+                            tr
+                                td #{department.name}
+                                if department.employees
+                                    td #{department.employees.length}
+                                else 
+                                    td 0
+                        else
+                            tr
+                                td(colspan="2") No departments found
+                    else
+                            tr
+                                td(colspan="2") No department var found
+        footer
+            p This is the footer
+            p #{new Date().toLocaleDateString()}

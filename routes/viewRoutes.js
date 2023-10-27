@@ -1,19 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const employeeController = require('../controller/employee');
+const viewController = require('../controller/view')
 
 // Home page
-router.get('/', (req, res) => {
-    res.render('index', { title: 'Hey', message: 'Hello there!' });
-})
+router.get('/', viewController.getHomePage);
 
 // Employees page
-router.get('/employees', (req, res) => {
-    res.render('employees', { title: 'Employees', message: 'Employees page' });
-})
+router.get('/employees', viewController.getEmployeePage);
+
+// Update employee page
+router.get('/employees/:id', viewController.getUpdateEmployeePage);
+
 // Department page
-router.get('/departments', (req, res) => {
-    res.render('departments', { title: 'Departments', message: 'Departments page' });
-})
+router.get('/departments', viewController.getDepartmentPage);
 
 module.exports = router;
