@@ -9,14 +9,15 @@ html(lang="en")
         header 
             h1 Employees
         main
-            table(width="100%")
-                thead
-                    tr
-                        th First Name
-                        th Last Name
-                        th Department
-                tbody
-                    if employees & employees.length > 0
+            div
+                table
+                    thead
+                        tr
+                            th First Name
+                            th Last Name
+                            th Department
+                            th Edit
+                    tbody
                         each employee in employees
                             tr
                                 td #{employee.firstName}
@@ -25,26 +26,15 @@ html(lang="en")
                                     td #{employee.department.name}
                                 else
                                     td No department
+                                td
+                                    a(href="/employee/update/" + employee._id)
+                                        button Edit
                         else
                             tr
-                                td(colspan="3") No employees found
-                    else
-                            tr
-                                td(colspan="3") No employees var found
-            //- form(action="/api/employees", method="post", enctype="json")
-            //-     h1 Add Employee
-            //-     label(for="firstName") First Name
-            //-     input(type="text", name="firstName")
-            //-     label(for="lastName") Last Name
-            //-     input(type="text", name="lastName")
-            //-     label(for="department") Department
-            //-     if departments & departments.length > 0
-            //-         select(name="department")
-            //-             each department in departments
-            //-                 option(value="#{department._id}") #{department.name}
-            //-     else
-            //-         p No departments found do assign to employee
-            //-     button(type="submit") Add Employee
+                                td(colspan="4") No employees found
         footer
-            p This is the footer
+            a(href="/employee/create")
+                button Add Employee
+            a(href="/")
+                button Home
             p #{new Date().toLocaleDateString()}

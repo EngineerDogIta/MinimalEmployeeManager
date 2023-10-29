@@ -1,8 +1,11 @@
+const employeeDao = require('../dao/employee');
 const employeeModel = require('../models/employee');
+const logger = require('../helpers/logger');
 
 // Define the getAllEmployees function 
 const getAllEmployees = async (req, res) => {
-    employeeModel.find({}).populate('department').exec().then(result => {
+    employeeDao.getAllEmployees.then(result => {
+        logger.debug("/api/ All employees found");
         res.status(200).json(result);
     }).catch(err => {
         res.status(500).json({ message: err.message });
@@ -11,7 +14,8 @@ const getAllEmployees = async (req, res) => {
 
 // Define the getEmployeeById function 
 const getEmployeeById = async (req, res) => {
-    employeeModel.findById(req.params.id).populate('department').exec().then(result => {
+    employeeDao.getEmployeeById(req.params.id).then(result => {
+        logger.debug("/api/ Employee " + req.params.id + " found");
         res.status(200).json(result);
     }).catch(err => {
         res.status(500).json({ message: err.message });
@@ -26,7 +30,8 @@ const createEmployee = async (req, res) => {
         department: req.body.department,
     });
 
-    employee.save().then(result => {
+    employeeDao.createEmployee(employee).then(result => {
+        logger.debug("/api/ Employee " + result._id + " created");
         res.status(201).json(result);
     }).catch(err => {
         res.status(500).json({ message: err.message });
@@ -35,17 +40,16 @@ const createEmployee = async (req, res) => {
 
 // Define the updateEmployeeById function 
 const updateEmployeeById = async (req, res) => {
-    employeeModel.findByIdAndUpdate(
+    employeeDao.updateEmployeeById(
         req.params.id,
         {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             department: req.body.department,
-        },
-        { new: true }
+        }
     )
-    .exec()
     .then(result => {
+        log("/api/ Employee " + req.params.id + " updated");
         res.status(200).json(result);
     }).catch(err => {
         res.status(500).json({ message: err.message });
@@ -54,7 +58,8 @@ const updateEmployeeById = async (req, res) => {
 
 // Define the deleteEmployeeById function 
 const deleteEmployeeById = async (req, res) => {
-    employeeModel.findByIdAndDelete(req.params.id).exec().then(result => {
+    employeeDao.deleteEmployeeById(req.params.id).then(result => {
+        logger.debug("/api/ Employee " + req.params.id + " deleted");
         res.status(200).json(result);
     }).catch(err => {
         res.status(500).json({ message: err.message });

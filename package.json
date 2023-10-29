@@ -4,7 +4,7 @@
   "description": "Employee management application, capable of handling records of the clinic departments and the medical staff by its departments",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "nodemon app.js | pino-pretty -t -l --messageformat='{levelLabel} - {pid} - url:{req.url}'"
   },
   "author": "",
   "license": "ISC",
@@ -13,6 +13,9 @@
     "express": "^4.18.2",
     "mongoose": "^7.6.3",
     "nodemon": "^3.0.1",
+    "pino": "^8.16.1",
+    "pino-http": "^8.5.1",
+    "pino-pretty": "^10.2.3",
     "pug": "^3.0.2"
   }
 }

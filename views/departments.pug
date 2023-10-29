@@ -14,21 +14,24 @@ html(lang="en")
                     tr
                         th Name
                         th Number of Employees
+                        th Edit
                 tbody
-                    if departments & departments.length > 0
-                        each department in departments
-                            tr
-                                td #{department.name}
-                                if department.employees
-                                    td #{department.employees.length}
-                                else 
-                                    td 0
-                        else
-                            tr
-                                td(colspan="2") No departments found
+                    each department in departments
+                        tr
+                            td #{department.name}
+                            if department.employees
+                                td #{department.employees.length}
+                            else 
+                                td 0
+                            td
+                                a(href="/department/update/" + department._id)
+                                    button Edit
                     else
-                            tr
-                                td(colspan="2") No department var found
+                        tr
+                            td(colspan="2") No departments found
         footer
-            p This is the footer
+            a(href="/department/create")
+                button Add Department
+            a(href="/")
+                button Home
             p #{new Date().toLocaleDateString()}

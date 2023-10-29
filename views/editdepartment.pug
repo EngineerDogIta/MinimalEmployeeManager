@@ -1,0 +1,63 @@
+- var editMode = department && department._id;
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        if editMode
+            title Edit Department #{department.name}
+        else
+            title Create Department
+        link(rel="stylesheet", href="https://unpkg.com/mvp.css")
+    body
+        header
+            if editMode
+                h1 Edit Department #{department.name}
+            else
+                h1 Create Department
+        main
+            if editMode
+                form(action="/department/update/redirect", method="post")
+                    input(type="hidden", name="id", value=department._id)
+                    input(type="text", name="name", value=department.name)
+                    table
+                        thead
+                            tr
+                                th Name
+                                th Add/Remove
+                        tbody
+                            each employee in employees
+                                tr
+                                    td #{employee.firstName} #{employee.lastName}
+                                    td
+                                        if employee.inDepartment
+                                            input(type="checkbox", name="employees", value=employee._id, checked)
+                                        else
+                                            input(type="checkbox", name="employees", value=employee._id)
+                            else
+                                tr
+                                    td(colspan="2") No employees found
+                    br
+                    button(type="submit") Update Department                    
+            else
+                form(action="/department/create/redirect", method="post")
+                    input(type="text", name="name", placeholder="Department Name")
+                    table 
+                        thead
+                            tr
+                                th Name
+                                th Add/Remove
+                        tbody
+                            each employee in employees
+                                tr
+                                    td #{employee.firstName} #{employee.lastName}
+                                    td
+                                        input(type="checkbox", name="employees", value=employee._id)
+                            else
+                                tr
+                                    td(colspan="2") No employees found
+                    br
+                    button(type="submit") Create Department
+        footer
+            a(href="/")
+                button Home
+            p #{new Date().toLocaleDateString()}
