@@ -86,6 +86,7 @@ const deleteEmployeeById = (id) => {
     return new Promise((resolve, reject) => {
         logger.debug('deleteEmployeeById - id: ' + id);
         employeeModel.findByIdAndDelete(id).exec().then(result => {
+            logger.info('Deleted employee with id: ' + id);
             logger.debug('deleteEmployeeById - result: ' + JSON.stringify(result));
             resolve(result);
         }).catch(err => {

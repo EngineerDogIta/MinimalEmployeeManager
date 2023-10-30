@@ -62,6 +62,8 @@ const updateDepartmentById = (id, department) => {
 const deleteDepartmentById = (id) => {
     return new Promise((resolve, reject) => {
         departmentModel.findByIdAndDelete(id).exec().then(result => {
+            logger.info('Deleted department with id: ' + id);
+            logger.debug('deleteDepartmentById - result: ' + JSON.stringify(result));
             resolve(result);
         }).catch(err => {
             reject(err);

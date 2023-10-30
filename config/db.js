@@ -1,14 +1,14 @@
 const mongoose = require('mongoose')
-
+const logger = require('../helpers/logger');
 const url = 'mongodb://localhost:27017/docker-node-mongo'
 
 const connectDb = () => {
     mongoose.connect(url)
         .then(() => {
-            console.log('Connected to database');
+            logger.info('Connected to database');
         })
         .catch((error) => {
-            console.log('Error connecting to database:', error);
+            logger.erro('Error connecting to database:', error);
         });
 }
 
