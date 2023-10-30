@@ -96,20 +96,21 @@ const getUpdateDepartmentPage = (req, res) => {
     logger.debug('getUpdateDepartmentPage');
     daoDepartment.getDepartmentById(req.params.id).then(department => {
         logger.debug('getUpdateDepartmentPage - department: ' + JSON.stringify(department));
+        logger.debug('getUpdateDepartmentPage - department.employees: ' + department.employees.length);
         daoEmployee.getAllEmployees().then(employees => {
             logger.debug('getUpdateDepartmentPage - employees: ' + employees.length);
             // Add a boolean to each employee to indicate if they are in the department
-            let employeesViewFixed = employees.map(employee => {
-                employee.selected = department.employees.some(departmentEmployee => departmentEmployee._id.toString() === employee._id.toString());
+            employeesViewFixed = employees.map(employee => {
+                employee.selected = department.employees.some(departmentEmployee => {
+                    return departmentEmployee._id.toString() === employee._id.toString();
+                });
                 return employee;
             });
-            res.render('editdepartment', { title: 'Update Department', message: 'Update Department page', department: department, employees: employeesViewFixed});
+            res.render('editdepartment', { title: 'Update Department', message: 'Update Department page', department: department, employees: employeesViewFixed });
         }).catch(err => {
-            logger.debug('getUpdateDepartmentPage - err: ' + err);
             res.status(500).json({ message: err.message });
         });
     }).catch(err => {
-        logger.error('getUpdateDepartmentPage - err: ' + err);
         res.status(500).json({ message: err.message });
     });
 };

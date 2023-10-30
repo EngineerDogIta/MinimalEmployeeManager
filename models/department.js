@@ -7,8 +7,17 @@ const departmentSchema = new mongoose.Schema({
     },
     employees: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Employee'
+        ref: 'Employee',
+        required: false,
+        default: null
     }]
+});
+
+departmentSchema.virtual('employeeCount', {
+    ref: 'Employee',
+    localField: '_id',
+    foreignField: 'department',
+    count: true
 });
 
 const Department = mongoose.model('Department', departmentSchema);

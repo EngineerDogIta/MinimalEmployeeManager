@@ -9,7 +9,7 @@ html(lang="en")
         header 
             h1 Departments
         main
-            table(width="100%")
+            table
                 thead
                     tr
                         th Name
@@ -19,10 +19,7 @@ html(lang="en")
                     each department in departments
                         tr
                             td #{department.name}
-                            if department.employees
-                                td #{department.employees.length}
-                            else 
-                                td 0
+                            td #{department.employees.length}
                             td
                                 a(href="/department/update/" + department._id)
                                     button Edit

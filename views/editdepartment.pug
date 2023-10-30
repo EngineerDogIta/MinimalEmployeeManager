@@ -29,7 +29,7 @@ html(lang="en")
                                 tr
                                     td #{employee.firstName} #{employee.lastName}
                                     td
-                                        if employee.inDepartment
+                                        if employee.selected
                                             input(type="checkbox", name="employees", value=employee._id, checked)
                                         else
                                             input(type="checkbox", name="employees", value=employee._id)

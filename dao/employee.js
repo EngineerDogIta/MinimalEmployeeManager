@@ -1,10 +1,10 @@
 const logger = require('../helpers/logger');
 const employeeModel = require('../models/employee');
+const departmentDao = require('./department');
 
 /** Use the employeeModel to find all employees, make a promise function */
 const getAllEmployees = () => {
     return new Promise((resolve, reject) => {
-        logger.debug('getAllEmployees');
         employeeModel.find({}).populate('department').exec().then(result => {
             logger.debug('getAllEmployees - result: ' + JSON.stringify(result));
             resolve(result);
@@ -19,11 +19,24 @@ const getAllEmployees = () => {
 const getEmployeeById = (id) => {
     return new Promise((resolve, reject) => {
         logger.debug('getEmployeeById - id: ' + id);
-        employeeModel.findById(id).populate('department').exec().then(result => {
+        employeeModel.findById(id).exec().then(result => {
             logger.debug('getEmployeeById - result: ' + JSON.stringify(result));
             resolve(result);
         }).catch(err => {
             logger.error('getEmployeeById - err: ' + err);
+            reject(err);
+        });
+    });
+};
+
+const getEmployeesInDepartment = (departmentId) => {
+    return new Promise((resolve, reject) => {
+        logger.debug('getEmployeesInDepartment - departmentId: ' + departmentId);
+        employeeModel.find({ department: departmentId }).exec().then(result => {
+            logger.debug('getEmployeesInDepartment - result: ' + JSON.stringify(result));
+            resolve(result);
+        }).catch(err => {
+            logger.error('getEmployeesInDepartment - err: ' + err);
             reject(err);
         });
     });
@@ -42,6 +55,20 @@ const createEmployee = (argEmployee) => {
 
         newEmployee.save().then(result => {
             logger.debug('createEmployee - result: ' + JSON.stringify(result));
+            if (argEmployee.department) {
+                departmentDao.updateDepartmentById(
+                    argEmployee.department,
+                    { 
+                        $push: { employees: result._id }
+                    }
+                ).then(() => {
+                    logger.debug('createEmployee - department updated');
+                    resolve(result);
+                }).catch(err => {
+                    logger.error('createEmployee - err: ' + err);
+                    reject(err);
+                });
+            }
             resolve(result);
         }).catch(err => {
             logger.error('createEmployee - err: ' + err);
@@ -70,15 +97,28 @@ const updateEmployeeById = (id, updateEmployee) => {
                 department: updateEmployee.department,
             },
             { new: true }
-        )
-        .exec()
-        .then(result => {
-            logger.debug('updateEmployeeById - result: ' + JSON.stringify(result));
-            resolve(result);
-        }).catch(err => {
-            logger.error('updateEmployeeById - err: ' + err);
-            reject(err);
-        });
+            ).exec()
+            .then(result => {
+                logger.debug('updateEmployeeById - result: ' + JSON.stringify(result));
+                if (updateEmployee.department) {
+                    departmentDao.updateDepartmentById(
+                        updateEmployee.department,
+                        { 
+                            $push: { employees: result._id }
+                        }
+                        ).then(() => {
+                            logger.debug('updateEmployeeById - department updated');
+                            resolve(result);
+                        }).catch(err => {
+                            logger.error('updateEmployeeById - err: ' + err);
+                            reject(err);
+                        });    
+                }
+                resolve(result);
+            }).catch(err => {
+                logger.error('updateEmployeeById - err: ' + err);
+                reject(err);
+            });
     });
 };
 
@@ -102,4 +142,5 @@ module.exports = {
     createEmployee,
     updateEmployeeById,
     deleteEmployeeById,
+    getEmployeesInDepartment
 };
