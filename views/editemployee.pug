@@ -16,23 +16,23 @@ html(lang="en")
                     input(type="text", name="firstName", value=employee.firstName)
                     input(type="text", name="lastName", value=employee.lastName)
                     select(name="department")
-                        if !employee.department 
-                            option(value="", selected, hidden, disabled) No department
-                        //- the first option is the selected option
+                        if !employee.department
+                            option(value="", hidden, selected) No department
+                        else 
+                            option(value="", hidden) No department
                         each department in departments
                             if department.selected
                                 option(value=department._id, selected) #{department.name}
                             else
                                 option(value=department._id) #{department.name}
-                        else
-                            p No departments found do assign to employee
                     button(type="submit") Update Employee                    
             else
                 form(action="/employee/create/redirect", method="post")
                     input(type="text", name="firstName", placeholder="First Name")
                     input(type="text", name="lastName", placeholder="Last Name")
                     select(name="department")
-                        each department in employee.departments
+                        option(value="", selected, hidden, disabled) No department
+                        each department in departments
                             option(value=department._id) #{department.name}
                     button(type="submit") Create Employee
         footer

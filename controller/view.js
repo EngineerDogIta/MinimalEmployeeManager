@@ -44,7 +44,11 @@ const getUpdateEmployeePage = (req, res) => {
         daoDepartment.getAllDepartments().then(departments => {
             // add a boolean to each department always false but there is only one department set to true
             let departmentsViewFixed = departments.map(department => {
-                department.selected = department._id.toString() === employee.department._id.toString();
+                if (employee.department == null) {
+                    employee.selected = false;
+                } else {
+                    department.selected = department._id.toString() === employee.department._id.toString();
+                }
                 return department;
             });
             logger.debug('added selected to departments: ' + JSON.stringify(departmentsViewFixed));
@@ -139,7 +143,7 @@ const getUpdateEmployeeRedirectPage = (req, res) => {
     let employee = new modelEmployee({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
-        department: req.body.department,
+        department: req.body.department == '' ? null : req.body.department,
     });
 
     logger.debug('getUpdateEmployeeRedirectPage - new_employee: ' + JSON.stringify(employee));
@@ -181,15 +185,15 @@ const getCreateEmployeeRedirectPage = (req, res) => {
     logger.debug('getCreateEmployeeRedirectPage');
 
     // Sanitize the incoming data
-    let modelEmployee = new modelEmployee({
+    let modelEmployee = {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
-        department: req.body.department,
-    });
-    logger.debug('getCreateEmployeeRedirectPage - bodyObj: ' + JSON.stringify(bodyObj));
+        department: req.body.department == '' ? null : req.body.department,
+    };
+    logger.debug('getCreateEmployeeRedirectPage - bodyObj: ' + JSON.stringify(modelEmployee));
 
     // use daoEmployee.createEmployee
-    daoEmployee.createEmployee(bodyObj).then(result => {
+    daoEmployee.createEmployee(modelEmployee).then(result => {
         logger.debug('getCreateEmployeeRedirectPage - result: ' + JSON.stringify(result));
         res.redirect('/employee/update/' + result._id);
     }).catch(err => {
