@@ -97,19 +97,7 @@ const getUpdateDepartmentPage = (req, res) => {
     daoDepartment.getDepartmentById(req.params.id).then(department => {
         logger.debug('getUpdateDepartmentPage - department: ' + JSON.stringify(department));
         logger.debug('getUpdateDepartmentPage - department.employees: ' + department.employees.length);
-        daoEmployee.getAllEmployees().then(employees => {
-            logger.debug('getUpdateDepartmentPage - employees: ' + employees.length);
-            // Add a boolean to each employee to indicate if they are in the department
-            employeesViewFixed = employees.map(employee => {
-                employee.selected = department.employees.some(departmentEmployee => {
-                    return departmentEmployee._id.toString() === employee._id.toString();
-                });
-                return employee;
-            });
-            res.render('editdepartment', { title: 'Update Department', message: 'Update Department page', department: department, employees: employeesViewFixed });
-        }).catch(err => {
-            res.status(500).json({ message: err.message });
-        });
+        res.render('editdepartment', { title: 'Update Department', message: 'Update Department page', department: department });
     }).catch(err => {
         res.status(500).json({ message: err.message });
     });
@@ -117,17 +105,16 @@ const getUpdateDepartmentPage = (req, res) => {
 
 const getUpdateDepartmentRedirectPage = (req, res) => {
 
-    // Sanitize the incoming data
+    // First let's update the Department model
     let bodyObj = new modelDepartment({
-        name: req.body.name,
-        employees: req.body.employees,
+        name: req.body.name
     });
     logger.debug('getUpdateDepartmentRedirectPage - bodyObj: ' + JSON.stringify(bodyObj));
 
     // use daoDepartment.updateDepartment
     daoDepartment.updateDepartmentById(req.body.id, bodyObj).then(result => {
-        logger.debug('getUpdateDepartmentRedirectPage - result: ' + JSON.stringify(result));
-        res.redirect('/department/update/' + result._id);
+        logger.debug('getUpdateDepartmentRedirectPage - req.body.employees: ' + JSON.stringify(req.body.employees));
+        res.redirect('/department/update/' + req.body.id);
     }).catch(err => {
         logger.error('getUpdateDepartmentRedirectPage - err: ' + err);
         res.status(500).json({ message: err.message });
@@ -167,7 +154,7 @@ const getUpdateEmployeeRedirectPage = (req, res) => {
  */
 const getCreateDepartmentPage = (req, res) => {
     logger.debug('getCreateDepartmentPage');
-    daoEmployee.getAllEmployees().then(employees => {
+    daoEmployee.getEmployeesNotHavingDepartment().then(employees => {
         logger.debug('getCreateDepartmentPage - employees: ' + employees.length);
         res.render('editdepartment', { title: 'Create Department', message: 'Create Department page', employees: employees});
     }).catch(err => {
@@ -208,14 +195,28 @@ const getCreateDepartmentRedirectPage = (req, res) => {
 
         // Sanitize the incoming data
         let bodyObj = {
-            name: req.body.name,
-            employees: req.body.employees,
+            name: req.body.name
         };
         logger.debug('getCreateDepartmentRedirectPage - bodyObj: ' + JSON.stringify(bodyObj));
 
         // use daoDepartment.createDepartment
         daoDepartment.createDepartment(bodyObj).then(result => {
             logger.debug('getCreateDepartmentRedirectPage - result: ' + JSON.stringify(result));
+            let departmentEmployees = req.body.employees ? req.body.employees : [];
+
+            // use daoDepartment.updateDepartmentById
+            let promises = departmentEmployees.map(employee => {
+                return daoEmployee.updateEmployeeById(employee, { department: result._id });
+            });
+
+            Promise.all(promises).then(() => {
+                logger.debug('getCreateDepartmentRedirectPage - promises done');
+                res.redirect('/department/update/' + result._id);
+            }).catch(err => {
+                logger.error('getCreateDepartmentRedirectPage - err: ' + err);
+                res.status(500).json({ message: err.message });
+            });
+
             res.redirect('/department/update/' + result._id);
         }).catch(err => {
             logger.debug('getCreateDepartmentRedirectPage - err: ' + err);

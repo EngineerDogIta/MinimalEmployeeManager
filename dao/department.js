@@ -5,7 +5,7 @@ const employeeDao = require('./employee');
 /** Use the departmentModel to find all departments, make a promise function */
 const getAllDepartments = () => {
     return new Promise((resolve, reject) => {
-        departmentModel.find({}).populate('employeeCount').exec().then(result => {
+        departmentModel.find({}).populate('employeesCount').exec().then(result => {
             logger.debug('getAllDepartments - result: ' + JSON.stringify(result));
             resolve(result);
         }).catch(err => {
@@ -18,7 +18,7 @@ const getAllDepartments = () => {
 /** Use the departmentModel to find a department by id, make a promise function */
 const getDepartmentById = (id) => {
     return new Promise((resolve, reject) => {
-        departmentModel.findById(id).exec().then(result => {
+        departmentModel.findById(id).populate('employees', 'firstname lastname').exec().then(result => {
             logger.debug('getDepartmentById - result: ' + JSON.stringify(result));
             resolve(result);
         }).catch(err => {
@@ -52,23 +52,13 @@ const updateDepartmentById = (id, department) => {
         departmentModel.findByIdAndUpdate(
             id,
             {
-                name: department.name,
-                employees: department.employees
+                name: department.name
             },
             { new: true }
         )
         .exec()
         .then(result => {
             logger.debug('updateDepartmentById - result: ' + JSON.stringify(result));
-            if (department.employees && department.employees.length > 0) {
-                department.employees.forEach(element => {employeeDao.updateEmployeeById
-                    employeeDao.updateEmployeeById(element, { department: result._id }).then(result => {
-                        logger.debug('updateDepartmentById - updateEmployeeById - result: ' + JSON.stringify(result));
-                    }).catch(err => {
-                        logger.error('updateDepartmentById - updateEmployeeById - err: ' + err);
-                    });
-                });
-            }
             resolve(result);
         }).catch(err => {
             logger.error('updateDepartmentById - err: ' + err);

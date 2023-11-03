@@ -19,7 +19,7 @@ html(lang="en")
                     each department in departments
                         tr
                             td #{department.name}
-                            td #{department.employees.length}
+                            td #{department.employeesCount}
                             td
                                 a(href="/department/update/" + department._id)
                                     button Edit

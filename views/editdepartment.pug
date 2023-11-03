@@ -19,25 +19,19 @@ html(lang="en")
                 form(action="/department/update/redirect", method="post")
                     input(type="hidden", name="id", value=department._id)
                     input(type="text", name="name", value=department.name)
-                    table
-                        thead
-                            tr
-                                th Name
-                                th Add/Remove
-                        tbody
-                            each employee in employees
-                                tr
-                                    td #{employee.firstName} #{employee.lastName}
-                                    td
-                                        if employee.selected
-                                            input(type="checkbox", name="employees", value=employee._id, checked)
-                                        else
-                                            input(type="checkbox", name="employees", value=employee._id)
-                            else
-                                tr
-                                    td(colspan="2") No employees found
-                    br
-                    button(type="submit") Update Department                    
+                    //- from department i can access to a list of employees, let's only show those in this department
+                    ul 
+                        each employee in department.employees
+                            li #{employee.firstName} #{employee.lastName}
+                        else 
+                            li No employees without a department
+
+
+                    button(type="submit") Update Department
+                //- TODO DELETE DEPARTMENT
+                //- form(action="/department/delete/redirect", method="post")
+                //-     input(type="hidden", name="id", value=department._id)
+                //-     button(type="submit") Delete Department
             else
                 form(action="/department/create/redirect", method="post")
                     input(type="text", name="name", placeholder="Department Name")
@@ -61,3 +55,10 @@ html(lang="en")
             a(href="/")
                 button Home
             p #{new Date().toLocaleDateString()}
+            if editMode
+                a(href="/department/create")
+                    button Add Department
+            a(href="/departments")
+                button Departments
+            a(href="/employees")
+                button Employees

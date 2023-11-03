@@ -5,11 +5,40 @@ const departmentDao = require('./department');
 /** Use the employeeModel to find all employees, make a promise function */
 const getAllEmployees = () => {
     return new Promise((resolve, reject) => {
-        employeeModel.find({}).populate('department').exec().then(result => {
+        employeeModel.find({}).populate('department', 'name').exec().then(result => {
             logger.debug('getAllEmployees - result: ' + JSON.stringify(result));
             resolve(result);
         }).catch(err => {
             logger.error('getAllEmployees - err: ' + err);
+            reject(err);
+        });
+    });
+};
+
+const getEmployeesNotInDepartment = (departmentId) => {
+    return new Promise((resolve, reject) => {
+        logger.debug('getEmployeesNotInDepartment - departmentId: ' + departmentId);
+        employeeModel.find({ department: { $ne: departmentId } }).exec().then(result => {
+            logger.debug('getEmployeesNotInDepartment - result: ' + JSON.stringify(result));
+            resolve(result);
+        }).catch(err => {
+            logger.error('getEmployeesNotInDepartment - err: ' + err);
+            reject(err);
+        });
+    });
+};
+
+const getEmployeesNotHavingDepartment = () => {
+    return new Promise((resolve, reject) => {
+        logger.debug('getEmployeesNotHavingDepartment');
+        // department may not be inside the employee document
+        // department may have a value of null
+
+        employeeModel.find({ department: { $in: [null, undefined] } }).exec().then(result => {
+            logger.debug('getEmployeesNotHavingDepartment - result: ' + JSON.stringify(result));
+            resolve(result);
+        }).catch(err => {
+            logger.error('getEmployeesNotHavingDepartment - err: ' + err);
             reject(err);
         });
     });
@@ -142,5 +171,7 @@ module.exports = {
     createEmployee,
     updateEmployeeById,
     deleteEmployeeById,
-    getEmployeesInDepartment
+    getEmployeesInDepartment,
+    getEmployeesNotInDepartment,
+    getEmployeesNotHavingDepartment
 };
