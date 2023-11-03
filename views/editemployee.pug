@@ -26,10 +26,9 @@ html(lang="en")
                             else
                                 option(value=department._id) #{department.name}
                     button(type="submit") Update Employee
-                //- TODO DELETE EMPLOYEE
-                //- form(action="/employee/delete/redirect", method="post")
-                //-     input(type="hidden", name="id", value=employee._id)
-                //-     button(type="submit") Delete Employee
+                form(action="/employee/delete/redirect", method="post")
+                    input(type="hidden", name="id", value=employee._id)
+                    button(type="submit") Delete Employee
             else
                 form(action="/employee/create/redirect", method="post")
                     input(type="text", name="firstName", placeholder="First Name")

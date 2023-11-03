@@ -25,13 +25,10 @@ html(lang="en")
                             li #{employee.firstName} #{employee.lastName}
                         else 
                             li No employees without a department
-
-
                     button(type="submit") Update Department
-                //- TODO DELETE DEPARTMENT
-                //- form(action="/department/delete/redirect", method="post")
-                //-     input(type="hidden", name="id", value=department._id)
-                //-     button(type="submit") Delete Department
+                form(action="/department/delete/redirect", method="post")
+                    input(type="hidden", name="id", value=department._id)
+                    button(type="submit") Delete Department
             else
                 form(action="/department/create/redirect", method="post")
                     input(type="text", name="name", placeholder="Department Name")

@@ -222,6 +222,28 @@ const getCreateDepartmentRedirectPage = (req, res) => {
             logger.debug('getCreateDepartmentRedirectPage - err: ' + err);
             res.status(500).json({ message: err.message });
         });
+};
+
+const getDeleteEmployeeRedirectPage = (req, res) => {
+    logger.debug('getDeleteEmployeeRedirectPage');
+    daoEmployee.deleteEmployeeById(req.body.id).then(result => {
+        logger.debug('getDeleteEmployeeRedirectPage - result: ' + JSON.stringify(result));
+        res.redirect('/employees');
+    }).catch(err => {
+        logger.error('getDeleteEmployeeRedirectPage - err: ' + err);
+        res.status(500).json({ message: err.message });
+    });
+};
+
+const getDeleteDepartmentRedirectPage = (req, res) => {
+    logger.debug('getDeleteDepartmentRedirectPage');
+    daoDepartment.deleteDepartmentById(req.body.id).then(result => {
+        logger.debug('getDeleteDepartmentRedirectPage - result: ' + JSON.stringify(result));
+        res.redirect('/departments');
+    }).catch(err => {
+        logger.error('getDeleteDepartmentRedirectPage - err: ' + err);
+        res.status(500).json({ message: err.message });
+    });
 }
 
 module.exports = {
@@ -237,5 +259,7 @@ module.exports = {
     getCreateEmployeeRedirectPage,
     getCreateDepartmentRedirectPage,
     getUpdateEmployeeRedirectPage,
-    getUpdateDepartmentRedirectPage
+    getUpdateDepartmentRedirectPage,
+    getDeleteEmployeeRedirectPage,
+    getDeleteDepartmentRedirectPage
 }

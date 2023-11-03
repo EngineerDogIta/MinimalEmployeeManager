@@ -17,11 +17,12 @@ router.post('/employee/create/redirect', viewController.getCreateEmployeeRedirec
 // Redirect from Create employee page
 router.post('/employee/update/redirect', viewController.getUpdateEmployeeRedirectPage);
 
+// Redirect from Create employee page to delete
+router.post('/employee/delete/redirect', viewController.getDeleteEmployeeRedirectPage);
+
 // Create employee page
 router.get('/employee/update/:id', viewController.getUpdateEmployeePage);
 
-// Employee page
-// router.get('/employee/:id', viewController.getEmployeePage);
 
 // Departments page
 router.get('/departments', viewController.getDepartmentsPage);
@@ -35,10 +36,10 @@ router.post('/department/create/redirect', viewController.getCreateDepartmentRed
 // Redirect from Update department page
 router.post('/department/update/redirect', viewController.getUpdateDepartmentRedirectPage);
 
+// Redirect from Update department page to delete
+router.post('/department/delete/redirect', viewController.getDeleteDepartmentRedirectPage);
+
 // Update department page
 router.get('/department/update/:id', viewController.getUpdateDepartmentPage);
-
-// Department page
-// router.get('/department/:id', viewController.getDepartmentPage);
 
 module.exports = router;
