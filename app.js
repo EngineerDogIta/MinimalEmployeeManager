@@ -1,3 +1,4 @@
+const cors = require("cors");
 const express = require('express');
 const dotenv = require('dotenv');
 const employeeRoutes = require('./routes/employeeRoutes');
@@ -17,6 +18,7 @@ const port = process.env.NODE_LOCAL_PORT || 3020;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 app.set('view engine', 'pug')
 
 app.use(express.static('public'))
