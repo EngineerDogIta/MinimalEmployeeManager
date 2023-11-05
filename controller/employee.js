@@ -4,7 +4,7 @@ const logger = require('../helpers/logger');
 
 // Define the getAllEmployees function 
 const getAllEmployees = async (req, res) => {
-    employeeDao.getAllEmployees.then(result => {
+    employeeDao.getAllEmployees().then(result => {
         logger.debug("/api/ All employees found");
         res.status(200).json(result);
     }).catch(err => {
